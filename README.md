@@ -1,4 +1,4 @@
-## Mandate form extraction (upgrade, October 2026)
+## Mandate form extraction
 
 The pipeline now also **reads** each customer's account mandate form. A mandate form is the instruction that says who may sign on an account, under what rule, and up to what daily limit. Until now the ETL stored these files as opaque binary data. The upgrade turns each form into verified fields, checks them against the customer record, and sends anything doubtful to a person.
 
