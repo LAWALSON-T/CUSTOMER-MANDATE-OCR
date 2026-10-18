@@ -1,0 +1,147 @@
+# Every secret comes from .env (never committed). See .env.example.
+
+x-airflow-common: &airflow-common
+  build: .
+  image: customer-mandate-airflow:2.8.1
+  environment: &airflow-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${POSTGRES_PASSWORD}@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY}
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    # Read by python-scripts/db_utils.py
+    MYSQL_HOST: mysql
+    MYSQL_DATABASE: customer_db
+    MYSQL_USER: etl_user
+    MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    MONGO_HOST: mongodb
+    MONGO_USER: admin
+    MONGO_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    MONGO_DATABASE: customer_mandates
+    # Read by the mandate extractor
+    ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    MANDATE_MODEL: ${MANDATE_MODEL:-claude-haiku-5-5}
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - ./airflow/plugins:/opt/airflow/plugins
+    - ./python-scripts:/opt/airflow/scripts
+    - ./source_files:/opt/airflow/source_files
+  networks:
+    - etl_network
+
+services:
+  # MySQL - Source Database
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_source
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: customer_db
+      MYSQL_USER: etl_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    networks:
+      - etl_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # MongoDB - Target Database
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb_target
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: customer_mandates
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - etl_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 90s
+
+  # Mongo Express - MongoDB Web UI (local only: no login on port 8082)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo_express
+    restart: unless-stopped
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://admin:${MONGO_ROOT_PASSWORD}@mongodb:27017/
+      ME_CONFIG_BASICAUTH: 'false'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - etl_network
+
+  # PostgreSQL for Airflow metadata
+  postgres:
+    image: postgres:13
+    container_name: airflow_postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - etl_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+
+  # Airflow Webserver
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow_webserver
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    environment:
+      <<: *airflow-env
+      AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
+    ports:
+      - "8081:8080"
+    command: >
+      bash -c "airflow db init &&
+               airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password ${AIRFLOW_ADMIN_PASSWORD} &&
+               airflow webserver"
+
+  # Airflow Scheduler
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow_scheduler
+    depends_on:
+      - airflow-webserver
+    command: scheduler
+
+networks:
+  etl_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  postgres_data:
+  mongodb_data:

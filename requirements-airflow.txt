@@ -1,0 +1,13 @@
+# Existing ETL
+pymongo==4.6.1
+pymysql==1.1.0
+pillow==10.2.0
+python-dotenv
+# Mandate extractor
+pypdf
+pypdfium2
+pytesseract
+numpy
+anthropic
+# Sample mandate form generator (generate_mandate_forms.py)
+reportlab==4.0.9

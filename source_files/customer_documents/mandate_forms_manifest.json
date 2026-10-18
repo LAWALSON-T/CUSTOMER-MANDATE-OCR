@@ -1,0 +1,192 @@
+[
+  {
+    "customer_id": "CUST001",
+    "file": "CUST001_mandate_form.pdf",
+    "layout": "labels",
+    "scan": false,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Wuse II Branch",
+      "account_name": "Doe John Enterprises",
+      "account_type": "Current",
+      "date_of_form": "13 March 2026",
+      "signatory_1": "John Doe",
+      "signatory_2": "Ngozi Adeleke",
+      "signing_rule": "Either signatory",
+      "daily_limit": "NGN 500,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST002",
+    "file": "CUST002_mandate_form.pdf",
+    "layout": "table",
+    "scan": true,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Wuse II Branch",
+      "account_name": "Smith Jane Enterprises",
+      "account_type": "Current",
+      "date_of_form": "17 March 2026",
+      "signatory_1": "Jane Smith",
+      "signatory_2": "Halima Bello",
+      "signing_rule": "Either signatory",
+      "daily_limit": "NGN 500,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST003",
+    "file": "CUST003_mandate_form.pdf",
+    "layout": "letter",
+    "scan": false,
+    "expected": "needs_review (customer name not a signatory)",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Port Harcourt Branch",
+      "account_name": "Johnson Robert Enterprises",
+      "account_type": "Savings",
+      "date_of_form": "3 March 2026",
+      "signatory_1": "Ifeoma Okeke",
+      "signatory_2": "Yusuf Danjuma",
+      "signing_rule": "Either signatory",
+      "daily_limit": "NGN 2,000,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST004",
+    "file": "CUST004_mandate_form.pdf",
+    "layout": "labels",
+    "scan": true,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Lekki Branch",
+      "account_name": "Williams Emily Enterprises",
+      "account_type": "Current",
+      "date_of_form": "8 March 2026",
+      "signatory_1": "Emily Williams",
+      "signatory_2": "Chidi Nwosu",
+      "signing_rule": "Either signatory",
+      "daily_limit": "NGN 2,000,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST005",
+    "file": "CUST005_mandate_form.pdf",
+    "layout": "table",
+    "scan": false,
+    "expected": "needs_review (remarks + conflicting amounts)",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Lekki Branch",
+      "account_name": "Brown Michael Enterprises",
+      "account_type": "Current",
+      "date_of_form": "2 March 2026",
+      "signatory_1": "Michael Brown",
+      "signatory_2": "Chidi Nwosu",
+      "signing_rule": "Either signatory",
+      "daily_limit": "NGN 1,250,000"
+    },
+    "remark": "Remarks: Daily transaction limit: NGN 50,000,000 as agreed with manager."
+  },
+  {
+    "customer_id": "CUST0001",
+    "file": "CUST0001_mandate_form.pdf",
+    "layout": "letter",
+    "scan": true,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Port Harcourt Branch",
+      "account_name": "Martinez Patricia Enterprises",
+      "account_type": "Current",
+      "date_of_form": "18 March 2026",
+      "signatory_1": "Patricia Martinez",
+      "signatory_2": "Ngozi Adeleke",
+      "signing_rule": "Both signatories",
+      "daily_limit": "NGN 750,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST0002",
+    "file": "CUST0002_mandate_form.pdf",
+    "layout": "labels",
+    "scan": false,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Lekki Branch",
+      "account_name": "Hernandez Charles Enterprises",
+      "account_type": "Current",
+      "date_of_form": "12 March 2026",
+      "signatory_1": "Charles Hernandez",
+      "signatory_2": "Ngozi Adeleke",
+      "signing_rule": "Either signatory",
+      "daily_limit": "NGN 500,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST0003",
+    "file": "CUST0003_mandate_form.pdf",
+    "layout": "table",
+    "scan": true,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Ikeja Branch",
+      "account_name": "Rodriguez Michelle Enterprises",
+      "account_type": "Savings",
+      "date_of_form": "22 March 2026",
+      "signatory_1": "Michelle Rodriguez",
+      "signatory_2": "Chidi Nwosu",
+      "signing_rule": "Both signatories",
+      "daily_limit": "NGN 1,250,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST0004",
+    "file": "CUST0004_mandate_form.pdf",
+    "layout": "letter",
+    "scan": false,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Port Harcourt Branch",
+      "account_name": "Thomas Andrew Enterprises",
+      "account_type": "Savings",
+      "date_of_form": "12 March 2026",
+      "signatory_1": "Andrew Thomas",
+      "signatory_2": "Amaka Eze",
+      "signing_rule": "Either signatory",
+      "daily_limit": "NGN 750,000"
+    },
+    "remark": null
+  },
+  {
+    "customer_id": "CUST0005",
+    "file": "CUST0005_mandate_form.pdf",
+    "layout": "labels",
+    "scan": true,
+    "expected": "auto_accept",
+    "fields": {
+      "bank": "Example Savings Bank",
+      "branch": "Ikeja Branch",
+      "account_name": "Garcia Thomas Enterprises",
+      "account_type": "Current",
+      "date_of_form": "19 March 2026",
+      "signatory_1": "Thomas Garcia",
+      "signatory_2": "Amaka Eze",
+      "signing_rule": "Both signatories",
+      "daily_limit": "NGN 1,250,000"
+    },
+    "remark": null
+  }
+]

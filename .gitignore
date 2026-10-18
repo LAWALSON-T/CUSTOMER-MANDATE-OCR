@@ -1,0 +1,7 @@
+# Add these lines to the project's .gitignore
+.env
+airflow/logs/
+mongodb-data/
+output/
+__pycache__/
+*.pyc
