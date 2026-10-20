@@ -218,9 +218,10 @@ Thresholds (page confidence 85, field confidence 80, ink coverage 90%) were set 
 | needs_review (false alarm) | CUST0005 | OCR unsure of a word in the branch name |
 | error, retried | CUST0003, CUST004 | `APIConnectionError`: the request never reached the model |
 
-[RETRY RESULT: what CUST0003 and CUST004 became on the next run]
 
 On the next scheduled run, CUST0003 and CUST004 both became `auto_accept` on their second attempt. Final outcome for the 10 forms: 7 `auto_accept`, 3 `needs_review` (2 traps caught, 1 false alarm), 0 errors.
+
+The first run loaded 5 customers `processed` and 5 `incomplete` (volume-test customers whose generated file paths do not exist). MySQL and MongoDB agreed: 1,005 customers, 1,005 documents, no duplicates.
 
 ## What testing taught me
 
